@@ -5,23 +5,21 @@ import N from '../assets/netflix_N.png';
 
 function MovieList() {
     const [movies, setmovies] = useState([]);
-    const api_key = 'e302de9c9cfc5e028a7de4bd2ed35330';
+    const API_KEY = import.meta.env.VITE_API_KEY;
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${api_key}`)
+        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`)
             .then(response => response.json())
             .then(data => setmovies(data.results))
-            .catch(error => console.log('Error fetching movies:', error));
     },[]);
 
     async function handleClick(movieId) {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${api_key}`);
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`);
         const data = await response.json();
         const videos = data.results;
         const trailer = videos.find(video => video.type === "Trailer");
-        console.log('Trailer:', trailer);
         if (trailer) {
             navigate(`/player/${trailer.key}`);
         } else {
@@ -29,6 +27,7 @@ function MovieList() {
         }
     } catch (error) {
         console.log('Error fetching trailer:', error);
+        alert('not fetching')
     }
 }
 
